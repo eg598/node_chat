@@ -1,24 +1,11 @@
 const { Message } = require('../models/message.model.js');
 const { messageService } = require('../services/message.service.js');
 
-// const getById = async (req, res) => {
-//   const { id } = req.body;
-
-//   const message = await messageService.getOne(id);
-
-//   if (!message) {
-//     return res.status(404).send({ message: 'Message not found' });
-//   }
-
-//   res.send(message);
-// };
-
-const getAll = async (res, req) => {
+const getAll = async (req, res) => {
   const { roomId } = req.params;
 
   const messages = await Message.findAll({
     where: { roomId },
-    order: [['createdAt', 'ASC']],
   });
 
   if (!messages) {
@@ -28,32 +15,23 @@ const getAll = async (res, req) => {
   res.send(messages);
 };
 
-const renameMessage = async (req, res) => {
-  const { id, name } = req.body;
-
-  if (!name) {
-    return res.status(404).send({ message: 'No name was provided' });
-  }
-
-  const message = await messageService.update(id, name);
-
-  res.send(message);
-};
-
 const createMessage = async (req, res) => {
-  const { name } = req.body;
+  const { authorId, text } = req.body;
+  const { roomId } = req.params;
 
-  if (!name) {
-    return res.status(404).send({ message: 'No name was provided' });
+  const time = new Date();
+
+  if (!authorId || !text || !roomId) {
+    return res.status(404).send({ message: 'Something went wrong' });
   }
 
-  await messageService.create(name);
+  await messageService.create(authorId, text, time, roomId);
 
   res.sendStatus(201);
 };
 
 const deleteMessage = async (req, res) => {
-  const { id } = req.body;
+  const { id } = req.params;
 
   const message = await messageService.getOne(id);
 
@@ -68,7 +46,6 @@ const deleteMessage = async (req, res) => {
 
 const messageController = {
   getAll,
-  renameMessage,
   createMessage,
   deleteMessage,
 };

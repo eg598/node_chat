@@ -1,7 +1,7 @@
 const { roomService } = require('../services/room.service.js');
 
 const getById = async (req, res) => {
-  const { id } = req.body;
+  const { id } = req.params;
 
   const room = await roomService.getOne(id);
 
@@ -13,7 +13,8 @@ const getById = async (req, res) => {
 };
 
 const renameRoom = async (req, res) => {
-  const { id, name } = req.body;
+  const { id } = req.params;
+  const { name } = req.body;
 
   if (!name) {
     return res.status(404).send({ message: 'No name was provided' });
@@ -37,7 +38,7 @@ const createRoom = async (req, res) => {
 };
 
 const deleteRoom = async (req, res) => {
-  const { id } = req.body;
+  const { id } = req.params;
 
   const room = await roomService.getOne(id);
 
