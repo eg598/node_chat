@@ -1,5 +1,7 @@
 const { Message } = require('../models/message.model.js');
+const { EventEmitter } = require('events');
 const { messageService } = require('../services/message.service.js');
+const messageEmitter = new EventEmitter();
 
 const getAll = async (req, res) => {
   const { roomId } = req.params;
@@ -12,7 +14,7 @@ const getAll = async (req, res) => {
     return res.status(404).send({ message: 'No messages found' });
   }
 
-  res.send(messages);
+  messageEmitter.once('message', () => res.send(messages));
 };
 
 const createMessage = async (req, res) => {
@@ -25,9 +27,17 @@ const createMessage = async (req, res) => {
     return res.status(404).send({ message: 'Something went wrong' });
   }
 
+  const message = {
+    authorId,
+    text,
+    time,
+    roomId,
+  };
+
   await messageService.create(authorId, text, time, roomId);
 
-  res.sendStatus(201);
+  messageEmitter.emit('message', message);
+  res.status(201).json(message);
 };
 
 const deleteMessage = async (req, res) => {

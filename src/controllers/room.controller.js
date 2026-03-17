@@ -13,14 +13,14 @@ const getById = async (req, res) => {
 };
 
 const renameRoom = async (req, res) => {
-  const { id } = req.params;
+  const { roomId } = req.params;
   const { name } = req.body;
 
   if (!name) {
     return res.status(404).send({ message: 'No name was provided' });
   }
 
-  const room = await roomService.update(id, name);
+  const room = await roomService.update(roomId, name);
 
   res.send(room);
 };

@@ -11,6 +11,10 @@ const User = client.define('User', {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  rooms: {
+    type: DataTypes.ARRAY(DataTypes.INTEGER), // масив кімнат
+    defaultValue: [],
+  },
 });
 
 module.exports = {

@@ -38,10 +38,30 @@ const deleteUser = async (req, res) => {
   res.sendStatus(204);
 };
 
+const joinRoom = async (req, res) => {
+  const { roomId } = req.params;
+  const { id } = req.body;
+
+  const user = await userService.getOne(id);
+
+  if (!user) {
+    return res.status(404).send({ message: 'User not found' });
+  }
+
+  if (!roomId) {
+    return res.status(404).send({ message: 'Room not found' });
+  }
+
+  await userService.addRoom(id, roomId);
+
+  res.send(roomId);
+};
+
 const userController = {
   getById,
   createUser,
   deleteUser,
+  joinRoom,
 };
 
 module.exports = {

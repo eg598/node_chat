@@ -18,11 +18,20 @@ const remove = async (id) => {
   return User.destroy({ where: { id } });
 };
 
+const addRoom = async (id, roomId) => {
+  const user = await getOne(id);
+  const arr = user.rooms;
+  const newArr = [...arr, roomId];
+
+  return user.update({ rooms: newArr });
+};
+
 const userService = {
   getOne,
   create,
   update,
   remove,
+  addRoom,
 };
 
 module.exports = {

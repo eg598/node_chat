@@ -18,9 +18,9 @@ const create = async (authorId, text, time, roomId) => {
 };
 
 const update = async (id, authorId, text, time, roomId) => {
-  const room = await getOne(id);
+  const message = await getOne(id);
 
-  return room.update({
+  return message.update({
     authorId,
     text,
     time,
